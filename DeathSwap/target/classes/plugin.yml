@@ -1,0 +1,12 @@
+name: DeathSwap
+version: 1.0-SNAPSHOT
+main: me.pzdrs.deathswap.DeathSwap
+api-version: 1.13
+authors: [Pzdrs]
+description: DeathSwap plugin
+
+commands:
+  deathSwap:
+    usage: /<command> <start|stop>
+    aliases:
+      - ds
