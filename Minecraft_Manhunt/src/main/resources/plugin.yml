@@ -1,0 +1,16 @@
+name: Manhunt
+version: ${project.version}
+main: me.pzdrs.manhunt.Manhunt
+api-version: 1.13
+authors: [Pzdrs]
+description: Minecraft Manhunt plugin inspired by Dream
+commands:
+  manhunt:
+    description: Main command
+    aliases:
+      - mh
+  getCompass:
+    description: Get player tracker
+    aliases:
+      - gc
+

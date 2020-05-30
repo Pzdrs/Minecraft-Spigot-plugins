@@ -1,0 +1,11 @@
+message:
+  playerOffline: "&cThis player is not online."
+  invalidGroup: "&cThis group doesn't exist."
+  playerAdded: "&9$player &chas been added as a &6$group&c."
+  playerRemoved: "&9$player &chas been removed from &6$group group&c."
+  tracker: "&6Now tracking &9$player&6."
+  specifyGroup: "&cPlease specify the group."
+  specifyPlayer: "&cPlease specify the player."
+  noSpeedrunnersSoFar: "&cThere are no speedrunners specified so far."
+  getCompass: "&aYou have received the tracker. Right-click to track a random speedrunner."
+  notAHunter: "&cOnly hunter can get a compass."
