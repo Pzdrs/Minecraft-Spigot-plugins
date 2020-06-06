@@ -1,0 +1,4 @@
+period: 300 #60 * 5 = 300 seconds
+blacklist-keywords:
+  - end
+  - shulker

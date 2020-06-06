@@ -1,0 +1,12 @@
+name: BlockShuffle
+version: ${project.version}
+main: me.pzdrs.blockshuffle.BlockShuffle
+api-version: 1.13
+authors: [Pzdrs]
+description: Inspired by Dream
+commands:
+  blockShuffle:
+    description: Main command
+    usage: /<command> <start | stop>
+    aliases:
+      - bs
