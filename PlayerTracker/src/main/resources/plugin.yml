@@ -1,0 +1,17 @@
+name: PlayerTracker
+version: ${project.version}
+main: me.pzdrs.playertracker.PlayerTracker
+api-version: 1.13
+authors: [Pzdrs]
+description: Tracking players using compass
+commands:
+  getTracker:
+    description: Gives the player a player tracker
+    usage: /<command>
+    permission: playertracker.getTracker
+    permission-message: §cYou do not have permission to use this command
+  track:
+    description: Set player tracker target
+    usage: /<command> <player>
+    permission: playertracker.track
+    permission-message: §cYou do not have permission to use this command
