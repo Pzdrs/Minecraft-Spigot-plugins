@@ -1,0 +1,70 @@
+# Percentage of players needed for the game to start
+playersNeeded: 0.1
+countdown:
+  # Lobby countdown (in seconds)
+  # Normal and Full-house mode (in minutes)
+  lobby: 5 # 5 seconds
+  normal: 0.5 # 15 minutes
+  full-house: 60 # 60 minutes
+# Bingo mode
+# normal - Player needs to complete a whole row or a column in order to win
+# full-house - Player needs to get ALL the items on the playing board
+mode: full-house
+# USE THE CORRECT SYNTAX FOR ITEM IDs | Item list: https://www.digminecraft.com/lists/item_id_list_pc.php
+# Also make sure to blacklist items, that do not have item form (i.e. AIR, all WALL variations, ...)
+blacklist:
+  - NETHER_STAR
+  - BEDROCK
+  - DRAGON_EGG
+  - BEACON
+# 25 items at minimum is required
+whitelist:
+  - DIAMOND
+  - EMERALD
+  - REDSTONE
+  - WHITE_WOOL
+  - DANDELION
+  - POPPY
+  - RED_MUSHROOM
+  - BROWN_MUSHROOM
+  - IRON_INGOT
+  - GOLD_INGOT
+  - TNT
+  - OBSIDIAN
+  - CRAFTING_TABLE
+  - FURNACE
+  - CLAY
+  - PUMPKIN
+  - STONE_BRICK_STAIRS
+  - HAY_BLOCK
+  - INK_SAC
+  - COAL_BLOCK
+  - GLASS
+  - REPEATER
+  - APPLE
+  - STONE_AXE
+  - DIAMOND_HOE
+  - GOLDEN_SHOVEL
+  - BOWL
+  - GUNPOWDER
+  - STRING
+  - FEATHER
+  - WHEAT
+  - FLINT
+  - SUGAR_CANE
+  - COOKED_COD
+  - TROPICAL_FISH
+  - CACTUS
+  - WHITE_BED
+  - RABBIT_FOOT
+  - ARMOR_STAND
+  - OAK_SAPLING
+  - JUNGLE_SAPLING
+  - DARK_OAK_SAPLING
+  - SPRUCE_SAPLING
+  - LOOM
+  - SMOKER
+  - GRINDSTONE
+  - BARREL
+  - SWEET_BERRIES
+  - CAMPFIRE
