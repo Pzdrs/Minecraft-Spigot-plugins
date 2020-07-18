@@ -5,6 +5,7 @@ import me.pzdrs.bingo.listeners.*;
 import me.pzdrs.bingo.managers.BingoPlayer;
 import me.pzdrs.bingo.managers.ConfigurationManager;
 import me.pzdrs.bingo.managers.GameManager;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -28,6 +29,12 @@ public final class Bingo extends JavaPlugin {
         this.gameManager = new GameManager(this);
 
         init();
+
+        // Verify configuration for items
+        if (getConfig().getString("itemMode") == null) throw new NullPointerException("Item mode is null");
+        if (getConfig().getString("itemMode").equalsIgnoreCase("whitelist") && getConfig().getStringList("whitelist").size() < 25)
+            throw new IllegalArgumentException("Item mode is set to Whitelist, but there are less than 25 items specified.");
+        // TODO: 7/18/2020 create new world for the players to play the game in
     }
 
     @Override
@@ -39,12 +46,12 @@ public final class Bingo extends JavaPlugin {
         return players;
     }
 
-    public BingoPlayer getPlayer(UUID uuid) {
-        return players.get(uuid);
+    public FileConfiguration getLang() {
+        return configurationManager.getLang();
     }
 
-    public ConfigurationManager getConfigurationManager() {
-        return configurationManager;
+    public BingoPlayer getPlayer(UUID uuid) {
+        return players.get(uuid);
     }
 
     public GameManager getGameManager() {
@@ -63,5 +70,7 @@ public final class Bingo extends JavaPlugin {
         new EventsItemAcquire(this);
         new EventAsyncPreLogin(this);
         new EventGameStartEnd(this);
+        new EventPlayerInteract(this);
+        new EventItemFound(this);
     }
 }

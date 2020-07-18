@@ -13,22 +13,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class GuiBingo extends GUI {
-    private ConfigurationManager configurationManager;
-    private GameManager gameManager = GameManager.getInstance();
+    private GameManager gameManager;
     private Player player;
     private Player target;
 
     public GuiBingo(Bingo plugin, Player player, Player target) {
         super(plugin, player);
-        this.configurationManager = ConfigurationManager.getInstance();
+        this.gameManager = plugin.getGameManager();
         this.player = player;
         this.target = target;
     }
 
     @Override
     public String getTitle() {
-        return Utils.color(target == null ? ConfigurationManager.getInstance().getLang().getString("other.ownCard") :
-                ConfigurationManager.getInstance().getLang().getString("other.playerCard").replace("$player", target.getDisplayName()));
+        return Utils.color(target == null ? plugin.getLang().getString("other.ownCard") :
+                plugin.getLang().getString("other.playerCard").replace("$player", target.getDisplayName()));
     }
 
     @Override
@@ -49,20 +48,20 @@ public class GuiBingo extends GUI {
             if (!item.isFound()) {
                 inventory.addItem(new ItemBuilder(item.getMaterial())
                         .addLoreLine("&7&m                                     ")
-                        .addLoreLine(configurationManager.getLang().getString("other.notFound"))
+                        .addLoreLine(plugin.getLang().getString("other.notFound"))
                         .build());
             } else {
                 if (item.getMaterial().equals(Material.LIME_STAINED_GLASS_PANE)) {
                     inventory.addItem(new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
-                            .setDisplayName(configurationManager.getLang().getString("other.freeSpace"))
+                            .setDisplayName(plugin.getLang().getString("other.freeSpace"))
                             .addLoreLine("&7&m                                     ")
-                            .addLoreLine(configurationManager.getLang().getString("other.found"))
+                            .addLoreLine(plugin.getLang().getString("other.found"))
                             .build());
                 } else {
                     inventory.addItem(new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
                             .setDisplayName(ChatColor.RESET + Utils.typeToFriendlyName(item.getMaterial()))
                             .addLoreLine("&7&m                                     ")
-                            .addLoreLine(configurationManager.getLang().getString("other.found"))
+                            .addLoreLine(plugin.getLang().getString("other.found"))
                             .build());
                 }
             }

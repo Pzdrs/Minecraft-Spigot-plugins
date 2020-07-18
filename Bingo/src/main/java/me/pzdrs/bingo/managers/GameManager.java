@@ -1,5 +1,6 @@
 package me.pzdrs.bingo.managers;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import me.pzdrs.bingo.Bingo;
 import me.pzdrs.bingo.Mode;
 import me.pzdrs.bingo.listeners.events.GameEndEvent;
@@ -9,6 +10,7 @@ import me.pzdrs.bingo.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -18,7 +20,6 @@ import java.util.Random;
 public class GameManager {
     private static GameManager instance;
     private Bingo plugin;
-    private ConfigurationManager configurationManager;
     private boolean gameInProgress;
     private Material[] cardItems;
     private Mode mode;
@@ -28,7 +29,6 @@ public class GameManager {
     public GameManager(Bingo plugin) {
         instance = this;
         this.plugin = plugin;
-        this.configurationManager = plugin.getConfigurationManager();
         this.gameInProgress = false;
         this.cardItems = new Material[25];
         this.mode = plugin.getConfig().getString("mode").equalsIgnoreCase("normal") ? Mode.NORMAL : Mode.FULL_HOUSE;
@@ -59,19 +59,32 @@ public class GameManager {
     }
 
     public void generateCards() {
-        for (int i = 0; i < cardItems.length; i++) {
-            Material material;
-            do {
-                material = Material.values()[new Random().nextInt(Material.values().length)];
-            } while (plugin.getConfig().getStringList("blacklist").contains(material.toString()) ||
-                    Arrays.asList(cardItems).contains(material) || material.equals(Material.LIME_STAINED_GLASS_PANE) || !material.isItem());
-            cardItems[i] = material;
+        switch (plugin.getConfig().getString("itemMode")) {
+            case "whitelist":
+                for (int i = 0; i < cardItems.length; i++) {
+                    Material material;
+                    do {
+                        material = Material.values()[new Random().nextInt(Material.values().length)];
+                    } while (!plugin.getConfig().getStringList("whitelist").contains(material.toString()) ||
+                            Arrays.asList(cardItems).contains(material) || material.equals(Material.LIME_STAINED_GLASS_PANE) || !material.isItem());
+                    cardItems[i] = material;
+                }
+                break;
+            case "blacklist":
+                for (int i = 0; i < cardItems.length; i++) {
+                    Material material;
+                    do {
+                        material = Material.values()[new Random().nextInt(Material.values().length)];
+                    } while (plugin.getConfig().getStringList("blacklist").contains(material.toString()) ||
+                            Arrays.asList(cardItems).contains(material) || material.equals(Material.LIME_STAINED_GLASS_PANE) || !material.isItem());
+                    cardItems[i] = material;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid item mode");
         }
         // Assign the cards to players
         plugin.getPlayers().forEach((uuid, bingoPlayer) -> bingoPlayer.setCard(new BingoCard(cardItems)));
-        for (Material cardItem : cardItems) {
-            System.out.println(cardItem);
-        }
     }
 
     public void startGameCountdown() {
@@ -82,9 +95,9 @@ public class GameManager {
                 if (timer == 0) cancel();
                 plugin.getPlayers().forEach((uuid, bingoPlayer) -> {
                     if (timer <= 60) {
-                        bingoPlayer.getScoreboard().updateLine(0, Utils.color("Time left:&a " + timer + "s"));
+                        bingoPlayer.getScoreboard().updateLine(1, Utils.color(" &9>>&a " + timer + "s"));
                     } else {
-                        bingoPlayer.getScoreboard().updateLine(0, Utils.color("Time left:&a " + timer / 60 + "m"));
+                        bingoPlayer.getScoreboard().updateLine(1, Utils.color(" &9>>&a " + timer / 60 + "m"));
                     }
                 });
                 timer--;
@@ -112,14 +125,23 @@ public class GameManager {
                     online.sendMessage(Message.info("chat.lobbyCountdown").replace("$timer", String.valueOf(timer)));
                     online.playSound(online.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f);
                 });
-                Utils.updateScoreboards();
+                plugin.getPlayers().forEach(((uuid, bingoPlayer) -> {
+                    if (Utils.isEnoughPlayers()) {
+                        bingoPlayer.getScoreboard().updateLine(1, Utils.color(" &9>>&a " + timer + "s"));
+                    } else {
+                        bingoPlayer.getScoreboard().updateLine(1, Utils.color(" &9>>&7 Waiting for players..."));
+                    }
+                }));
                 timer--;
             }
 
             @Override
             public synchronized void cancel() throws IllegalStateException {
                 super.cancel();
-                Utils.updateScoreboards();
+                plugin.getPlayers().forEach((uuid, bingoPlayer) -> {
+                    if (!Utils.isEnoughPlayers())
+                        bingoPlayer.getScoreboard().updateLine(1, Utils.color(" &9>>&7 Waiting for players..."));
+                });
             }
         }.runTaskTimer(plugin, 0, 20);
     }

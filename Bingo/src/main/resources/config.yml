@@ -10,6 +10,10 @@ countdown:
 # normal - Player needs to complete a whole row or a column in order to win
 # full-house - Player needs to get ALL the items on the playing board
 mode: full-house
+# Item mode
+# whitelist - The cards will contain only items in whitelist
+# blacklist - The cards will contain any item that is in the game except the ones in the blacklist
+itemMode: whitelist
 # USE THE CORRECT SYNTAX FOR ITEM IDs | Item list: https://www.digminecraft.com/lists/item_id_list_pc.php
 # Also make sure to blacklist items, that do not have item form (i.e. AIR, all WALL variations, ...)
 blacklist:
@@ -17,7 +21,7 @@ blacklist:
   - BEDROCK
   - DRAGON_EGG
   - BEACON
-# 25 items at minimum is required
+# 25 items at minimum are required
 whitelist:
   - DIAMOND
   - EMERALD

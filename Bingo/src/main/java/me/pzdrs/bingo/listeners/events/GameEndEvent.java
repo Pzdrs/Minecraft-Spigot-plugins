@@ -7,7 +7,8 @@ import org.bukkit.event.HandlerList;
 public class GameEndEvent extends Event {
     public enum Outcome {
         DEFAULT,
-        TIMEOUT
+        TIMEOUT,
+        NO_PLAYERS_LEFT
     }
 
     private Outcome outcome;

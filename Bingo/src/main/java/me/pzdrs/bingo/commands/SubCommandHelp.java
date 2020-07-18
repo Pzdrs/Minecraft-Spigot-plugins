@@ -34,6 +34,11 @@ public class SubCommandHelp extends SubCommand {
     }
 
     @Override
+    public String[] getAliases() {
+        return new String[0];
+    }
+
+    @Override
     public void handle(Player player, String[] args) {
         player.sendMessage(Utils.color("&7&m                                               "));
         subCommands.forEach(subCommand -> player.sendMessage(Utils.color("&9" + subCommand.getUsage() + " &8-&r " + subCommand.getDescription())));

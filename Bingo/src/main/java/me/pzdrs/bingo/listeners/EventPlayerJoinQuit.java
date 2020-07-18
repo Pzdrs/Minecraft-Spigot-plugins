@@ -1,12 +1,12 @@
 package me.pzdrs.bingo.listeners;
 
 import me.pzdrs.bingo.Bingo;
+import me.pzdrs.bingo.listeners.events.GameEndEvent;
 import me.pzdrs.bingo.managers.BingoPlayer;
 import me.pzdrs.bingo.managers.GameManager;
 import me.pzdrs.bingo.utils.Message;
 import me.pzdrs.bingo.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,19 +45,22 @@ public class EventPlayerJoinQuit implements Listener {
         // Remove player from HashMap players
         plugin.getPlayers().remove(player.getUniqueId());
         // Check if still enough players to start the game
-        if (!Utils.isEnoughPlayers() && gameManager.getLobbyCountdown() != null) gameManager.getLobbyCountdown().cancel();
+        if (!Utils.isEnoughPlayers() && gameManager.getLobbyCountdown() != null)
+            gameManager.getLobbyCountdown().cancel();
         updateScoreboards();
+        if (plugin.getPlayers().size() == 1 && gameManager.isGameInProgress())
+            Bukkit.getServer().getPluginManager().callEvent(new GameEndEvent(GameEndEvent.Outcome.NO_PLAYERS_LEFT, Bukkit.getPlayer(plugin.getPlayers().keySet().stream().findFirst().get())));
     }
 
     private void updateScoreboards() {
         plugin.getPlayers().forEach((uuid, bingoPlayer) -> {
             // Update countdown
             if (Utils.isEnoughPlayers()) {
-                bingoPlayer.getScoreboard().updateLine(0, "Starting in: " + ChatColor.GREEN + gameManager.getTimer());
+                bingoPlayer.getScoreboard().updateLine(1, Utils.color(" &9>>&a " + gameManager.getTimer() + "s"));
             } else {
-                bingoPlayer.getScoreboard().updateLine(0, "Waiting for players...");
+                bingoPlayer.getScoreboard().updateLine(1, Utils.color(" &9>>&7 Waiting for player..."));
             }
-            bingoPlayer.getScoreboard().updateLine(2, "Players: " + ChatColor.GREEN + plugin.getPlayers().size() + "/" + plugin.getServer().getMaxPlayers());
+            bingoPlayer.getScoreboard().updateLine(4, Utils.color(" &9>>&a " + plugin.getPlayers().size() + "/" + plugin.getServer().getMaxPlayers()));
         });
     }
 }

@@ -40,7 +40,7 @@ public class BingoCard {
         get(material).setFound(true);
         owner.sendMessage(Message.info("chat.found").replace("$item", Utils.typeToFriendlyName(material)));
         owner.playSound(owner.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-        plugin.getPlayer(owner.getUniqueId()).getScoreboard().updateLine(6, "Your score: " + ChatColor.GREEN + score);
+        plugin.getPlayer(owner.getUniqueId()).getScoreboard().updateLine(10, Utils.color(" &9>>&a "+plugin.getPlayer(owner.getUniqueId()).getCard().getScore()));
         // Check if this item was the last needed to win
         if (isComplete())
             Bukkit.getServer().getPluginManager().callEvent(new GameEndEvent(GameEndEvent.Outcome.DEFAULT, owner));

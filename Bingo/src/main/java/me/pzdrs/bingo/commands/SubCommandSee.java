@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class SubCommandSee extends SubCommand {
     private Bingo plugin;
 
-    public SubCommandSee(Bingo plugin) {
+    SubCommandSee(Bingo plugin) {
         this.plugin = plugin;
     }
 
@@ -32,6 +32,11 @@ public class SubCommandSee extends SubCommand {
     @Override
     public String getPermission() {
         return "bingo.see";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[0];
     }
 
     @Override

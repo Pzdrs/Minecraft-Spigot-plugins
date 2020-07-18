@@ -12,9 +12,9 @@ public class SubCommandEnd extends SubCommand {
     private Bingo plugin;
     private GameManager gameManager;
 
-    public SubCommandEnd(Bingo plugin) {
+    SubCommandEnd(Bingo plugin) {
         this.plugin = plugin;
-        this.gameManager = GameManager.getInstance();
+        this.gameManager = plugin.getGameManager();
     }
 
     @Override
@@ -35,6 +35,11 @@ public class SubCommandEnd extends SubCommand {
     @Override
     public String getPermission() {
         return "bingo.end";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[]{"e"};
     }
 
     @Override

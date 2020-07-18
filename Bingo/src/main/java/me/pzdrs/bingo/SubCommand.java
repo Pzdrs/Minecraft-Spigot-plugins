@@ -12,5 +12,7 @@ public abstract class SubCommand {
 
     public abstract String getPermission();
 
+    public abstract String[] getAliases();
+
     public abstract void handle(Player player, String args[]);
 }

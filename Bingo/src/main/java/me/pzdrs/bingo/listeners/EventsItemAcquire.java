@@ -1,6 +1,7 @@
 package me.pzdrs.bingo.listeners;
 
 import me.pzdrs.bingo.Bingo;
+import me.pzdrs.bingo.listeners.events.ItemFoundEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,26 +14,22 @@ public class EventsItemAcquire implements Listener {
 
     public EventsItemAcquire(Bingo plugin) {
         this.plugin = plugin;
-
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
     public void onItemPickup(EntityPickupItemEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-        if (!plugin.getGameManager().isGameInProgress()) return;
-        plugin.getPlayer(event.getEntity().getUniqueId()).getCard().checkItem(event.getItem().getItemStack().getType());
+        plugin.getServer().getPluginManager().callEvent(new ItemFoundEvent(event.getItem().getItemStack().getType(), (Player) event.getEntity()));
     }
 
     @EventHandler
     public void onCraft(CraftItemEvent event) {
-        if (!plugin.getGameManager().isGameInProgress()) return;
-        plugin.getPlayer(event.getWhoClicked().getUniqueId()).getCard().checkItem(event.getCurrentItem().getType());
+        plugin.getServer().getPluginManager().callEvent(new ItemFoundEvent(event.getCurrentItem().getType(), (Player) event.getWhoClicked()));
     }
 
     @EventHandler
     public void onFurnaceExtract(FurnaceExtractEvent event) {
-        if (!plugin.getGameManager().isGameInProgress()) return;
-        plugin.getPlayer(event.getPlayer().getUniqueId()).getCard().checkItem(event.getItemType());
+        plugin.getServer().getPluginManager().callEvent(new ItemFoundEvent(event.getItemType(), event.getPlayer()));
     }
 }

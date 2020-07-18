@@ -1,7 +1,7 @@
 name: Bingo
-version: 1.0-SNAPSHOT
+version: 0.2
 main: me.pzdrs.bingo.Bingo
-api-version: 1.13
+api-version: 1.16
 authors: [Pzdrs]
 description: A Bingo minigame
 

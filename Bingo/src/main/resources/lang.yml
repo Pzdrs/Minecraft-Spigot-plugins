@@ -1,7 +1,8 @@
 prefix: "&3Bingo"
 scoreboard:
-  header: "&e&lBINGO"
-  footer: "&ewww.pzdrs.io"
+  header: "&3&lBINGO"
+  # footer: "www.yourwebsite.com"
+  # Uncomment if you want your own footer, credit is appreciated though
 
 chat:
   noPermission: "You don't have permission to do this."
@@ -19,6 +20,7 @@ chat:
   join: "&e$player&r joined."
   quit: "&e$player&r left."
   found: "You found $item."
+  version: "&7You are currently running &9$plugin &7v$version &eby $author&7."
 console:
   notAvailable: "Only players may execute this command!"
   invalidItemMode: "INVALID ITEM MODE!"
@@ -32,6 +34,7 @@ other:
   freeSpace: "&a&lFREE SPACE"
   victoryTitle: "&6&lVICTORY"
   victorySubtitle: "&7You have won the game!"
+  victorySubtitle2: "&7Everyone left!"
   gameOverTitle: "&c&lGAME OVER"
   gameOverSubtitle: "&7$winner has won the game!"
   gameOverSubtitle2: "&7The time has ran out!"

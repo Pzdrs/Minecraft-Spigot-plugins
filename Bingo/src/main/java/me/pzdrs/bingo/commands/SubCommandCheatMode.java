@@ -10,7 +10,7 @@ public class SubCommandCheatMode extends SubCommand {
     private Bingo plugin;
     private GameManager gameManager;
 
-    public SubCommandCheatMode(Bingo plugin) {
+    SubCommandCheatMode(Bingo plugin) {
         this.plugin = plugin;
         this.gameManager = plugin.getGameManager();
     }
@@ -33,6 +33,11 @@ public class SubCommandCheatMode extends SubCommand {
     @Override
     public String getPermission() {
         return "bingo.cheatMode";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[]{"cM"};
     }
 
     @Override

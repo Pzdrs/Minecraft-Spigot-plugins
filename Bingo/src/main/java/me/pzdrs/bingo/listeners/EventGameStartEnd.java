@@ -3,23 +3,22 @@ package me.pzdrs.bingo.listeners;
 import me.pzdrs.bingo.Bingo;
 import me.pzdrs.bingo.listeners.events.GameEndEvent;
 import me.pzdrs.bingo.listeners.events.GameStartEvent;
-import me.pzdrs.bingo.managers.ConfigurationManager;
 import me.pzdrs.bingo.managers.GameManager;
+import me.pzdrs.bingo.utils.ItemBuilder;
 import me.pzdrs.bingo.utils.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.persistence.PersistentDataType;
 
 public class EventGameStartEnd implements Listener {
     private Bingo plugin;
     private GameManager gameManager;
-    private ConfigurationManager configurationManager;
 
     public EventGameStartEnd(Bingo plugin) {
         this.plugin = plugin;
-        this.gameManager = GameManager.getInstance();
-        this.configurationManager = ConfigurationManager.getInstance();
+        this.gameManager = plugin.getGameManager();
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -32,6 +31,12 @@ public class EventGameStartEnd implements Listener {
         // Set game scoreboards to everyone
         plugin.getPlayers().forEach((uuid, bingoPlayer) -> {
             bingoPlayer.setScoreboard(Utils.getGameScoreboard(Bukkit.getPlayer(uuid)));
+            bingoPlayer.getPlayer().getInventory().clear();
+            bingoPlayer.getPlayer().getInventory().addItem(new ItemBuilder(Material.PAPER)
+                    .setDisplayName("&aYour Bingo card")
+                    .addLoreLine("&7Right-click to open your Bingo card")
+                    .setPersistentData(plugin, "bingoCardOpener", PersistentDataType.BYTE, (byte) 1)
+                    .build());
         });
     }
 
@@ -39,20 +44,20 @@ public class EventGameStartEnd implements Listener {
     public void onGameEnd(GameEndEvent event) {
         gameManager.setGameInProgress(false);
         gameManager.getGameCountdown().cancel();
+        Player winner = event.getWinner();
         switch (event.getOutcome()) {
             case DEFAULT:
-                Player winner = event.getWinner();
                 plugin.getPlayers().forEach((uuid, bingoPlayer) -> {
                     // Handle everyone
                     if (winner.getUniqueId().equals(uuid)) {
                         // Handle winner
                         winner.playSound(winner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
                         winner.spawnParticle(Particle.FIREWORKS_SPARK, winner.getLocation(), 150);
-                        winner.sendTitle(Utils.color(configurationManager.getLang().getString("other.victoryTitle")), Utils.color(configurationManager.getLang().getString("other.victorySubtitle")), 20, 100, 20);
+                        winner.sendTitle(Utils.color(plugin.getLang().getString("other.victoryTitle")), Utils.color(plugin.getLang().getString("other.victorySubtitle")), 20, 100, 20);
                     } else {
                         // Handle loser
                         Player loser = Bukkit.getPlayer(uuid);
-                        loser.sendTitle(Utils.color(configurationManager.getLang().getString("other.gameOverTitle")), Utils.color(configurationManager.getLang().getString("other.gameOverSubtitle").replace("$winner", winner.getDisplayName())), 20, 100, 20);
+                        loser.sendTitle(Utils.color(plugin.getLang().getString("other.gameOverTitle")), Utils.color(plugin.getLang().getString("other.gameOverSubtitle").replace("$winner", winner.getDisplayName())), 20, 100, 20);
                         loser.playSound(loser.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1f, 1f);
 
                     }
@@ -61,19 +66,25 @@ public class EventGameStartEnd implements Listener {
             case TIMEOUT:
                 plugin.getPlayers().forEach((uuid, bingoPlayer) -> {
                     Player player = Bukkit.getPlayer(uuid);
-                    player.sendTitle(Utils.color(configurationManager.getLang().getString("other.gameOverTitle")), Utils.color(configurationManager.getLang().getString("other.gameOverSubtitle2")), 20, 100, 20);
+                    player.sendTitle(Utils.color(plugin.getLang().getString("other.gameOverTitle")), Utils.color(plugin.getLang().getString("other.gameOverSubtitle2")), 20, 100, 20);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1f, 1f);
                 });
                 break;
+            case NO_PLAYERS_LEFT:
+                winner.playSound(winner.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+                winner.spawnParticle(Particle.FIREWORKS_SPARK, winner.getLocation(), 150);
+                winner.sendTitle(Utils.color(plugin.getLang().getString("other.victoryTitle")), Utils.color(plugin.getLang().getString("other.victorySubtitle2")), 20, 100, 20);
+                break;
         }
         // Handle all players - UI
-        Bukkit.getOnlinePlayers().forEach(o -> {
-            o.getInventory().clear();
-            o.setGameMode(GameMode.ADVENTURE);
-            o.setHealth(20d);
-            o.setFoodLevel(20);
-            o.closeInventory();
-            plugin.getPlayer(o.getUniqueId()).getScoreboard().delete();
+        plugin.getPlayers().forEach((uuid, bingoPlayer) -> {
+            Player player = Bukkit.getPlayer(uuid);
+            player.closeInventory();
+            player.getInventory().clear();
+            player.setGameMode(GameMode.ADVENTURE);
+            player.setHealth(20d);
+            player.setFoodLevel(20);
+            bingoPlayer.getScoreboard().delete();
         });
         // Kick everyone and restart the server
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {

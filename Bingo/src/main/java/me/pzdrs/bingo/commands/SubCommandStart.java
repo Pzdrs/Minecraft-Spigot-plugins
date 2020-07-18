@@ -12,9 +12,9 @@ public class SubCommandStart extends SubCommand {
     private Bingo plugin;
     private GameManager gameManager;
 
-    public SubCommandStart(Bingo plugin) {
+    SubCommandStart(Bingo plugin) {
         this.plugin = plugin;
-        this.gameManager = GameManager.getInstance();
+        this.gameManager = plugin.getGameManager();
     }
 
     @Override
@@ -35,6 +35,11 @@ public class SubCommandStart extends SubCommand {
     @Override
     public String getPermission() {
         return "bingo.start";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[]{"s"};
     }
 
     @Override
