@@ -1,5 +1,5 @@
 name: Bingo
-version: 0.2
+version: 0.4
 main: me.pzdrs.bingo.Bingo
 api-version: 1.16
 authors: [Pzdrs]
@@ -7,4 +7,7 @@ description: A Bingo minigame
 
 commands:
   bingo:
-    usage: /<command>
+    usage: /<command> [subcommand] [player]
+    description: The main command
+    aliases:
+      - b
